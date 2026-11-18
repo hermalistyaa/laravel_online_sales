@@ -1,85 +1,49 @@
-<!DOCTYPE html>
-<html lang="id">
+<!DOCTYPE html> 
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="id"><head> 
 
-    <title>@yield('title', 'Dashboard') · Admin Ruang Belanja</title>
+<meta charset="UTF-8"> 
 
-    <link rel="stylesheet" href="{{ asset('css/store.css') }}">
-</head>
+<meta name="viewport" content="width=device-width,initial-scale=1"> 
 
-<body>
+<meta name="description" content="Belanja kebutuhan sehari-hari dengan pilihan produk, stok yang jelas, dan pengiriman yang mudah."> 
 
-    <div class="admin-wrap">
+<title>@yield('title','Katalog') · Ruang Belanja</title> 
 
-        <aside class="admin-side">
-            <a class="brand" href="{{ route('admin.dashboard') }}">
-                ruangbelanja.
-            </a>
+<link rel="stylesheet" href="{{ asset('css/store.css') }}"> 
 
-            <div class="eyebrow">Ruang Pengelola</div>
+</head> 
 
-            @foreach ([
-                ['admin.dashboard', 'Ringkasan'],
-                ['admin.categories.index', 'Kategori'],
-                ['admin.products.index', 'Produk'],
-                ['admin.stock.index', 'Stok & Barang Masuk'],
-                ['admin.shipping.index', 'Ekspedisi'],
-                ['admin.orders.index', 'Transaksi']
-            ] as [$route, $label])
+<body> 
 
-                @if (Route::has($route))
-                    <a href="{{ route($route) }}"
-                        @if (request()->routeIs(
-                            $route === 'admin.dashboard'
-                                ? $route
-                                : str_replace('.index', '.*', $route)
-                        ))
-                            aria-current="page"
-                        @endif>
-                        {{ $label }}
-                    </a>
-                @endif
+<div class="top-note">Pilihan sederhana. Belanja lebih nyaman.</div> 
 
-            @endforeach
+<header class="site-header"> 
 
-            <a href="{{ route('shop.index') }}">
-                ↗ Lihat Toko
-            </a>
+<nav class="container nav" aria-label="Navigasi utama"> 
 
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
+<a class="brand" href="{{ route('shop.index') }}"> 
 
-                <button class="btn-light">
-                    Keluar
-                </button>
-            </form>
+<span class="brand-mark" aria-hidden="true">↗</span>ruangbelanja<span style="color:#7aa487">.</span></a><a href="{{ route('shop.index') }}" @if(request()->routeIs('shop.*')) aria-current="page" @endif>Jelajahi Produk</a> 
 
-        </aside>
+@auth @if(auth()->user()->role==='customer')@if(Route::has('cart.index'))<a href="{{ route('cart.index') }}" @if(request()->routeIs('cart.*')) aria-current="page" @endif>Keranjang ({{ array_sum(session('cart',[])) }})</a>@endif 
 
-        <main class="admin-main">
+@if(Route::has('orders.index')) 
 
-            <div class="admin-context">
-                <span>
-                    Administrasi / @yield('title', 'Dashboard')
-                </span>
+<a href="{{ route('orders.index') }}" @if(request()->routeIs('orders.*')) aria-current="page" @endif>Pesanan</a>@endif 
 
-                <span>
-                    {{ auth()->user()->name }} · Admin
-                </span>
-            </div>
+@else<a href="{{ route('admin.dashboard') }}">Dashboard Admin</a>@endif<span class="account">Halo, {{ auth()->user()->name }}</span><form method="POST" action="{{ route('logout') }}">@csrf<button class="btn-light">Keluar</button></form>@else<a href="{{ route('login') }}">Masuk</a><a class="btn" href="{{ route('register') }}">Daftar</a>@endauth</nav></header> 
 
-            @include('layouts.flash')
+<main class="container">@include('layouts.flash') @yield('content')</main> 
 
-            @yield('content')
+<footer class="container footer"><strong>ruangbelanja.</strong> 
 
-        </main>
+<span>Proyek praktikum Laravel · Admin & Pelanggan</span> 
 
-    </div>
+<span>Belanja dengan informasi yang jelas.</span></footer> 
 
-    <script src="{{ asset('js/store.js') }}" defer></script>
+<script src="{{ asset('js/store.js') }}" defer></script> 
 
-</body>
-</html>
+</body> 
+
+</html> 
