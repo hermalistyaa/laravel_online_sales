@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\Admin\ShippingServiceController;
+use App\Http\Controllers\ProductCatalogController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -81,6 +82,15 @@ Route::prefix('admin')
             ->name('shipping.destroy');
     });
 
+        Route::get('/', [ProductCatalogController::class, 'index'])->name('shop.index'); 
+        Route::get('/produk/{product:slug}', [ProductCatalogController::class, 'show'])->name('shop.show'); 
+
     Route::get('/shop', function () {
     return view('shop.index');
 })->name('shop.index');
+
+    Route::get('/shop', [ProductCatalogController::class, 'index'])
+    ->name('shop.index');
+    Route::get('/shop/{product:slug}', [ProductCatalogController::class, 'show'])
+    ->name('shop.show');
+
