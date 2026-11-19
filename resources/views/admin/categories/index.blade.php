@@ -1,85 +1,51 @@
-<!DOCTYPE html>
-<html lang="id">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.admin')
 
-    <title>@yield('title', 'Dashboard') · Admin Ruang Belanja</title>
+@section('title', 'Kategori')
 
-    <link rel="stylesheet" href="{{ asset('css/store.css') }}">
-</head>
+@section('content')
 
-<body>
+<div class="page-header">
+    <h1>Manajemen Kategori</h1>
+    <p>Kelola kategori produk Ruang Belanja.</p>
+</div>
 
-    <div class="admin-wrap">
+<div class="card">
+    <h3>Tambah Kategori</h3>
 
-        <aside class="admin-side">
-            <a class="brand" href="{{ route('admin.dashboard') }}">
-                ruangbelanja.
-            </a>
+    <form action="{{ route('admin.categories.store') }}" method="POST">
+        @csrf
 
-            <div class="eyebrow">Ruang Pengelola</div>
+        <input
+            type="text"
+            name="name"
+            placeholder="Masukkan nama kategori"
+            required
+        >
 
-            @foreach ([
-                ['admin.dashboard', 'Ringkasan'],
-                ['admin.categories.index', 'Kategori'],
-                ['admin.products.index', 'Produk'],
-                ['admin.stock.index', 'Stok & Barang Masuk'],
-                ['admin.shipping.index', 'Ekspedisi'],
-                ['admin.orders.index', 'Transaksi']
-            ] as [$route, $label])
+        <button type="submit">Tambah Kategori</button>
+    </form>
+</div>
 
-                @if (Route::has($route))
-                    <a href="{{ route($route) }}"
-                        @if (request()->routeIs(
-                            $route === 'admin.dashboard'
-                                ? $route
-                                : str_replace('.index', '.*', $route)
-                        ))
-                            aria-current="page"
-                        @endif>
-                        {{ $label }}
-                    </a>
-                @endif
+<div class="card">
+    <h3>Daftar Kategori</h3>
 
-            @endforeach
+    @forelse ($categories as $category)
+        <div>
+            <strong>{{ $category->name }}</strong>
+            <span>{{ $category->products_count }} produk</span>
 
-            <a href="{{ route('shop.index') }}">
-                ↗ Lihat Toko
-            </a>
-
-            <form method="POST" action="{{ route('logout') }}">
+            <form action="{{ route('admin.categories.destroy', $category) }}"
+                  method="POST">
                 @csrf
+                @method('DELETE')
 
-                <button class="btn-light">
-                    Keluar
-                </button>
+                <button type="submit">Hapus</button>
             </form>
+        </div>
+    @empty
+        <p>Belum ada kategori.</p>
+    @endforelse
+</div>
 
-        </aside>
-
-        <main class="admin-main">
-
-            <div class="admin-context">
-                <span>
-                    Administrasi / @yield('title', 'Dashboard')
-                </span>
-
-                <span>
-                    {{ auth()->user()->name }} · Admin
-                </span>
-            </div>
-
-            @include('layouts.flash')
-
-            @yield('content')
-
-        </main>
-
-    </div>
-
-    <script src="{{ asset('js/store.js') }}" defer></script>
-
-</body>
-</html>
+@endsection

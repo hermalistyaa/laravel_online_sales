@@ -46,5 +46,6 @@ class CategoryController extends Controller
  
         $category->delete(); 
         return back()->with('success', 'Kategori dihapus.'); 
+        
     } 
 } 

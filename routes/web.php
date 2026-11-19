@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\StockController;
+use App\Http\Controllers\Admin\ShippingServiceController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -54,6 +56,29 @@ Route::prefix('admin')
         // Produk
         Route::resource('products', ProductController::class)
             ->names('products');
+
+        // Stok
+        Route::get('/stock', [StockController::class, 'index'])
+            ->name('stock.index');
+
+        Route::get('/stock/create', [StockController::class, 'create'])
+            ->name('stock.create');
+
+        Route::post('/stock', [StockController::class, 'store'])
+            ->name('stock.store');
+        
+        // Ekspedisi
+        Route::get('/shipping', [ShippingServiceController::class, 'index'])
+            ->name('shipping.index');
+
+        Route::post('/shipping', [ShippingServiceController::class, 'store'])
+            ->name('shipping.store');
+
+        Route::put('/shipping/{service}', [ShippingServiceController::class, 'update'])
+            ->name('shipping.update');
+
+        Route::delete('/shipping/{service}', [ShippingServiceController::class, 'destroy'])
+            ->name('shipping.destroy');
     });
 
     Route::get('/shop', function () {
